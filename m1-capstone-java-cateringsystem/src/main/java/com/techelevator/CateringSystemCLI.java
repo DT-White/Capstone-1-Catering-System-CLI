@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
 import java.io.FileNotFoundException;
@@ -33,7 +34,7 @@ public class CateringSystemCLI {
 	 * Your application starts here
 	 */
 	public void run() {
-
+Bank bank = new Bank();
 		menu.showWelcomeMessage();
 		InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
 		Inventory inventory = new Inventory();
@@ -53,8 +54,18 @@ public class CateringSystemCLI {
 				THEN go to the purchase menu
 			*/
 			menu.showMainMenu();
-			if (menu.readUserSelection() == 1) {
+			int userSelection = menu.readUserSelection();
+			if (userSelection == 1) {
 				menu.showInventory(inventory);
+			}  else if (userSelection == 2) {
+				while (true){
+					menu.showOrderMenu(bank.getBalance());
+					userSelection = menu.readUserSelection();
+					if (userSelection==1){
+						menu.showCaseMessage(bank.addMoney(menu.addMoneyEntry()));
+
+					}
+				}
 			}
 
 		}
