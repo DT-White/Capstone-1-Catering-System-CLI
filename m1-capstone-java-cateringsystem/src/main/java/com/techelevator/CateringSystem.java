@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.view.Menu;
 
 import java.io.FileNotFoundException;
 
@@ -12,7 +13,7 @@ public class CateringSystem {
 
     public static void main(String[] args) {
 
-
+        Menu menu = new Menu();
         Inventory inventory = new Inventory();
 
         InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
@@ -21,6 +22,12 @@ public class CateringSystem {
             inventoryFileReader.readInventory(inventory);
         } catch (FileNotFoundException e) {
         }
+        menu.showWelcomeMessage();
+        menu.showMainMenu();
+        if (menu.readUserSelection() == 1) {
+            menu.showInventory(inventory);
+        }
+
 
     }
 }

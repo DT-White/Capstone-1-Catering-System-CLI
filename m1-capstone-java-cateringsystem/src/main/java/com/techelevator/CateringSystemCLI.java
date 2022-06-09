@@ -1,6 +1,9 @@
 package com.techelevator;
 
+import com.techelevator.filereader.InventoryFileReader;
 import com.techelevator.view.Menu;
+
+import java.io.FileNotFoundException;
 
 /*
  * This class should control the workflow of the application, but not do any other work
@@ -32,7 +35,12 @@ public class CateringSystemCLI {
 	public void run() {
 
 		menu.showWelcomeMessage();
-
+		InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
+		Inventory inventory = new Inventory();
+		try {
+			inventoryFileReader.readInventory(inventory);
+		} catch (FileNotFoundException e) {
+		}
 
 		while (true) {
 			/*
@@ -44,6 +52,11 @@ public class CateringSystemCLI {
 			ELSE IF the User's Choice is Purchase,
 				THEN go to the purchase menu
 			*/
+			menu.showMainMenu();
+			if (menu.readUserSelection() == 1) {
+				menu.showInventory(inventory);
+			}
+
 		}
 	}
 
