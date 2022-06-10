@@ -11,23 +11,33 @@ import java.io.FileNotFoundException;
  */
 public class CateringSystem {
 
-    public static void main(String[] args) {
+    private Menu menu;
+    private Cart cart;
 
-        Menu menu = new Menu();
-        Inventory inventory = new Inventory();
-
-        InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
-
-        try {
-            inventoryFileReader.readInventory(inventory);
-        } catch (FileNotFoundException e) {
-        }
-        menu.showWelcomeMessage();
-        menu.showMainMenu();
-        if (menu.readUserSelection() == 1) {
-            menu.showInventory(inventory);
-        }
-
-
+    public CateringSystem(Menu menu, Cart cart) {
+        this.menu = menu;
+        this.cart = cart;
     }
+
+    public int userSelectedNumber(String input) {
+        int number = Integer.parseInt(input);
+        if (number > 0 && number < 4) {
+            return number;
+        }
+        menu.showCaseMessage("Invalid entry. Please enter 1, 2, or 3.");
+        return 0;
+    }
+
+    public String userSelectedAddToCart() throws NullPointerException {
+        String cartMessage = "Invalid product code.";
+        String productCode = menu.readUserSelection("Please enter a product code to add to cart: ");
+        int quantity = Integer.parseInt(menu.readUserSelection("Please enter a quantity for item " + productCode + ": "));
+        try {
+            cartMessage = cart.addToCart(productCode, quantity);
+        } finally {
+            return cartMessage;
+        }
+    }
+
+
 }
