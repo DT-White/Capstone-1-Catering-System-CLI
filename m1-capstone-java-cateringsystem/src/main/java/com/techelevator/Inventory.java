@@ -33,9 +33,21 @@ public class Inventory {
         return inventoryMap;
     }
 
+    public CateringItem findItemById (String productId) {
+        for (Map.Entry<String, CateringItem> currentItem : inventoryMap.entrySet()){
+            if (currentItem.getValue().getProductCode().equalsIgnoreCase(productId)) {
+                return currentItem.getValue();
+            }
+        }
+        return null;
+    }
+    public void quantityLoweredInInventory(String productId,int quantity) {
+        CateringItem itemToDeplete = inventoryMap.get(productId);
+        itemToDeplete.setQuantity(itemToDeplete.getQuantity()- quantity);
+    }
 
 }
+
 // remove count when sold,
 
-// check quantity to see if available to sell
 

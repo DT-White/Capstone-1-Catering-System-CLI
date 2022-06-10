@@ -10,7 +10,7 @@ public class Cart {
     private double subtotal;
     private Inventory inventory;
 
-    public Cart(Inventory inventory){
+    public Cart(Inventory inventory) {
         this.inventory = inventory;
         this.subtotal = 0;
         this.cartMap = new HashMap<>();
@@ -18,8 +18,9 @@ public class Cart {
 
     public String addToCart(String productId, int quantity) throws NullPointerException {
         String message = "Invalid product code.";
+        CateringItem itemToAdd = inventory.findItemById(productId);
         try {
-            if (quantity < 1 || quantity > findItemById(productId).getQuantity()) {
+            if (quantity < 1 || quantity > itemToAdd.getQuantity()) {
                 return "Invalid quantity. Select available quantity or new item.";
             }
             if (inventory.getInventoryMap().containsKey(productId)) {
@@ -30,21 +31,14 @@ public class Cart {
                     cartMap.put(productId, quantity);
                     message = "Item added to cart.";
                 }
-                subtotal += findItemById(productId).getPrice() * quantity;
+                subtotal += itemToAdd.getPrice() * quantity;
+                inventory.quantityLoweredInInventory(productId,quantity);
             }
-        } finally{
+        } finally {
             return message;
         }
     }
 
-    public CateringItem findItemById (String productId) {
-        for (Map.Entry<String, CateringItem> currentItem : inventory.getInventoryMap().entrySet()){
-            if (currentItem.getValue().getProductCode().equalsIgnoreCase(productId)) {
-                return currentItem.getValue();
-            }
-        }
-        return null;
-    }
 
     public double getSubtotal() {
         return subtotal;

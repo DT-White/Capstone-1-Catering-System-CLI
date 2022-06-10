@@ -72,11 +72,11 @@ public class Menu {
         return userInput.nextLine();
     }
 
-    public void showOrderMenu(double accountBalance, double subtotal) {
+    public void showOrderMenu(double accountBalance, double subtotal, CateringSystem cateringSystem) {
         System.out.println();
         System.out.println("  Current Account Balance: $" + accountBalance);
         if (subtotal > 0) {
-            System.out.println("  Current total: $" + subtotal);
+            System.out.println(cateringSystem.checkTotalBalance());
         }
         System.out.println("  (1) Add Money");
         System.out.println("  (2) Select Product");

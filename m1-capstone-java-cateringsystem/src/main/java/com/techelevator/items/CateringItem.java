@@ -38,4 +38,8 @@ public abstract class CateringItem {
     public double getPrice() {
         return price;
     }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }

@@ -1,6 +1,7 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
 import java.io.FileNotFoundException;
@@ -13,10 +14,12 @@ public class CateringSystem {
 
     private Menu menu;
     private Cart cart;
+    private Bank bank;
 
-    public CateringSystem(Menu menu, Cart cart) {
+    public CateringSystem(Menu menu, Cart cart, Bank bank) {
         this.menu = menu;
         this.cart = cart;
+        this.bank = bank;
     }
 
     public int userSelectedNumber(String input) {
@@ -37,7 +40,14 @@ public class CateringSystem {
         } finally {
             return cartMessage;
         }
-    }
 
+    }
+    public String checkTotalBalance () {
+        String totalMessage = "  Current total: $" + cart.getSubtotal();
+        if (cart.getSubtotal()> bank.getBalance()){
+            totalMessage += " Insufficient Funds";
+
+        }return totalMessage;
+    }
 
 }
