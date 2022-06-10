@@ -45,9 +45,12 @@ public class Inventory {
         CateringItem itemToDeplete = inventoryMap.get(productId);
         itemToDeplete.setQuantity(itemToDeplete.getQuantity()- quantity);
     }
+    public String[] getProductIdList(){
+        return inventoryMap.keySet().toArray(new String[0]);
+    }
 
 }
 
-// remove count when sold,
+
 
 

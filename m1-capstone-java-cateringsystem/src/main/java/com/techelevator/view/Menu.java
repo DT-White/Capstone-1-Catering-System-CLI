@@ -4,6 +4,8 @@ import com.techelevator.CateringSystem;
 import com.techelevator.Inventory;
 import com.techelevator.items.CateringItem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -40,19 +42,15 @@ public class Menu {
         System.out.println("  (1) Display Catering Items");
         System.out.println("  (2) Order");
         System.out.println("  (3) Quit");
-        System.out.println();
+
     }
 
-    public void showInventory(Inventory inventory) {
+    public void showInventory(Inventory inventory, CateringSystem cateringSystem) {
         String space = " ";
-        int nameLength = 0;
 
-        // Find the longest name in the inventory for equal spacing
-        for (Map.Entry<String, CateringItem> currentEntry : inventory.getInventoryMap().entrySet()) {
-            if (currentEntry.getValue().getName().length() > nameLength) {
-                nameLength = currentEntry.getValue().getName().length();
-            }
-        }
+
+       //  Find the longest name in the inventory for equal spacing
+    int nameLength = cateringSystem.findLongestNameLength(new ArrayList<>(inventory.getInventoryMap().values()));
         System.out.println();
         System.out.println("Product Code     Description" + space.repeat(nameLength - 7) + "Qty      Price");
 
@@ -62,12 +60,13 @@ public class Menu {
             System.out.print("              " + currentItem.getName());
             System.out.print(space.repeat((nameLength + 4) - currentItem.getName().length()) + currentItem.getQuantity());
             String quantity = Integer.toString(currentItem.getQuantity());
-            System.out.println(space.repeat(9 - quantity.length()) + "$" + currentItem.getPrice());
+            System.out.println( space.repeat(9-quantity.length())+ "$" + currentItem.getPrice());
         }
     }
 
 
     public String readUserSelection(String message) {
+        System.out.println();
         System.out.print(message);
         return userInput.nextLine();
     }
@@ -81,7 +80,7 @@ public class Menu {
         System.out.println("  (1) Add Money");
         System.out.println("  (2) Select Product");
         System.out.println("  (3) Complete Transaction");
-        System.out.println();
+
 
     }
 

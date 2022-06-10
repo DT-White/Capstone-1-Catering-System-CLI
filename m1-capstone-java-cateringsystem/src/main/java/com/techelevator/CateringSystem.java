@@ -1,10 +1,13 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.items.CateringItem;
 import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Map;
 
 /*
     This class should encapsulate all the functionality of the Catering system, meaning it should
@@ -15,11 +18,13 @@ public class CateringSystem {
     private Menu menu;
     private Cart cart;
     private Bank bank;
+    private Inventory inventory;
 
-    public CateringSystem(Menu menu, Cart cart, Bank bank) {
+    public CateringSystem(Menu menu, Cart cart, Bank bank, Inventory inventory) {
         this.menu = menu;
         this.cart = cart;
         this.bank = bank;
+        this.inventory = inventory;
     }
 
     public int userSelectedNumber(String input) {
@@ -42,12 +47,27 @@ public class CateringSystem {
         }
 
     }
-    public String checkTotalBalance () {
+
+    public String checkTotalBalance() {
         String totalMessage = "  Current total: $" + cart.getSubtotal();
-        if (cart.getSubtotal()> bank.getBalance()){
+        if (cart.getSubtotal() > bank.getBalance()) {
             totalMessage += " Insufficient Funds";
 
-        }return totalMessage;
+        }
+        return totalMessage;
     }
+
+    public int findLongestNameLength(List<CateringItem> productIdList) {
+        int nameLength = 0;
+        for (Map.Entry<String, CateringItem> currentEntry : inventory.getInventoryMap().entrySet()) {
+            if (currentEntry.getValue().getName().length() > nameLength && productIdList.contains(currentEntry.getValue())) {
+                nameLength = currentEntry.getValue().getName().length();
+            }
+        }
+        return nameLength;
+
+
+    }
+
 
 }

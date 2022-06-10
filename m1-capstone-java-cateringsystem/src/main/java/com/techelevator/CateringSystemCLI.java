@@ -40,7 +40,7 @@ Bank bank = new Bank();
 		InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
 		Inventory inventory = new Inventory();
 		Cart cart = new Cart(inventory);
-		CateringSystem cateringSystem = new CateringSystem(menu, cart,bank);
+		CateringSystem cateringSystem = new CateringSystem(menu, cart,bank,inventory);
 		try {
 			inventoryFileReader.readInventory(inventory);
 		} catch (FileNotFoundException e) {
@@ -59,7 +59,7 @@ Bank bank = new Bank();
 			menu.showMainMenu();
 			int userSelection = cateringSystem.userSelectedNumber(menu.readUserSelection("Please enter selection by number: "));
 			if (userSelection == 1) {
-				menu.showInventory(inventory);
+				menu.showInventory(inventory,cateringSystem);
 			}  else if (userSelection == 2) {
 				menu.showSubMenuHeading();
 				while (true){
@@ -68,8 +68,8 @@ Bank bank = new Bank();
 					if (userSelection==1){
 						menu.showCaseMessage(bank.addMoney(menu.addMoneyEntry()));
 					} else if (userSelection == 2) {
-						menu.showInventory(inventory);
-						menu.showCaseMessage(cateringSystem.userSelectedAddToCart());
+						menu.showInventory(inventory,cateringSystem);
+						menu.showCaseMessage(menu.tryUserSelectedAddToCart(cateringSystem));
 					}
 				}
 			}
