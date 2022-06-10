@@ -11,9 +11,10 @@ public abstract class CateringItem {
     private String name;
     private double price;
     private int quantity = 25;
+    private String itemType;
 
-    public CateringItem(String productCode, String name, Double price) {
-
+    public CateringItem(String itemType, String productCode, String name, Double price) {
+        this.itemType = itemType;
         this.productCode = productCode;
         this.name = name;
         this.price = price;
@@ -36,10 +37,14 @@ public abstract class CateringItem {
     }
 
     public double getPrice() {
-        return price;
+        return Math.round(price * 100.0) / 100.0;
     }
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getItemType() {
+        return itemType;
     }
 }

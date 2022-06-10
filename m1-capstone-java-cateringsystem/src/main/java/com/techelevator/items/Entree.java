@@ -2,7 +2,7 @@ package com.techelevator.items;
 
 public class Entree extends CateringItem{
     public Entree(String productCode, String name, Double price) {
-        super(productCode, name, price);
+        super("Entree",productCode, name, price);
     }
 
     @Override

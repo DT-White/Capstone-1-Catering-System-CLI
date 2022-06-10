@@ -1,9 +1,11 @@
 package com.techelevator.view;
 
+import com.techelevator.Cart;
 import com.techelevator.CateringSystem;
 import com.techelevator.Inventory;
 import com.techelevator.items.CateringItem;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +66,26 @@ public class Menu {
         }
     }
 
+    public void showCart(Inventory inventory, Cart cart, CateringSystem cateringSystem) {
+        String space = " ";
+        DecimalFormat f = new DecimalFormat("##.00");
+        List<CateringItem> cartList = cart.getCartList();
+
+        //  Find the longest name in the inventory for equal spacing
+        int nameLength = cateringSystem.findLongestNameLength(cartList);
+        System.out.println();
+
+        for (CateringItem currentItem: cartList) {
+            int quantity = cart.getCartMap().get(currentItem.getProductCode());
+            String extendedPriceFormatted = f.format(currentItem.getPrice() * quantity);
+            System.out.print(space + quantity);
+            System.out.print(space.repeat(6-Integer.toString(quantity).length()) + currentItem.getItemType());
+            System.out.print(space.repeat(12-currentItem.getItemType().length()) + currentItem.getName());
+            System.out.print(space.repeat((nameLength + 4) - currentItem.getName().length()) + "$" + f.format(currentItem.getPrice()));
+            System.out.print(space.repeat(9- extendedPriceFormatted.length()) + "$" + extendedPriceFormatted);
+            System.out.println("   " + currentItem.getReminder());
+        }
+    }
 
     public String readUserSelection(String message) {
         System.out.println();
@@ -110,6 +132,16 @@ public class Menu {
         } catch (NullPointerException e) {
             return "Invalid product code.";
         }
+    }
+
+    public void showOrderTotal(Cart cart){
+        System.out.println();
+        System.out.println(" Total: $" + cart.getSubtotal());
+    }
+
+    public void showChange (CateringSystem cateringSystem){
+        System.out.println();
+        System.out.println(cateringSystem.returnChange());
     }
 
 }

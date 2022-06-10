@@ -70,6 +70,11 @@ Bank bank = new Bank();
 					} else if (userSelection == 2) {
 						menu.showInventory(inventory,cateringSystem);
 						menu.showCaseMessage(menu.tryUserSelectedAddToCart(cateringSystem));
+					} else if (userSelection == 3) {
+						menu.showCart(inventory, cart, cateringSystem);
+						menu.showOrderTotal(cart);
+						menu.showChange(cateringSystem);
+						break;
 					}
 				}
 			}

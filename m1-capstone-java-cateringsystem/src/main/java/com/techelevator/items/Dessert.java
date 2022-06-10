@@ -2,7 +2,7 @@ package com.techelevator.items;
 
 public class Dessert extends CateringItem{
     public Dessert(String productCode, String name, Double price) {
-        super(productCode, name, price);
+        super("Dessert",productCode, name, price);
 
     }
 

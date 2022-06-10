@@ -66,7 +66,23 @@ public class CateringSystem {
         }
         return nameLength;
 
+    }
 
+    public String returnChange(){
+        Map<String, Integer> changeMap = bank.makeChange(cart.getSubtotal());
+        String changeString = " You received";
+        String[] stringParts = new String[changeMap.size()];
+        int i = 0;
+        for (Map.Entry<String, Integer> denomination: changeMap.entrySet()){
+             stringParts[i] = " (" + denomination.getValue() + ") " + denomination.getKey();
+             i++;
+        }
+        changeString += stringParts[0];
+        for (int j = 1; j < stringParts.length; j++) {
+            changeString +="," + stringParts[j];
+        }
+        changeString += " in change";
+        return changeString;
     }
 
 

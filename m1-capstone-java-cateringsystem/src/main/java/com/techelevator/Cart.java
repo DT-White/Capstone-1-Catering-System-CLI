@@ -2,7 +2,9 @@ package com.techelevator;
 
 import com.techelevator.items.CateringItem;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Cart {
@@ -39,8 +41,19 @@ public class Cart {
         }
     }
 
+    public List<CateringItem> getCartList() {
+        List<CateringItem> cartList = new ArrayList<>();
+        for (Map.Entry<String,Integer> currentEntry: cartMap.entrySet()){
+            cartList.add(inventory.findItemById(currentEntry.getKey()));
+        }
+        return cartList;
+    }
+
+    public Map<String, Integer> getCartMap() {
+        return cartMap;
+    }
 
     public double getSubtotal() {
-        return subtotal;
+        return Math.round(subtotal * 100.0) / 100.0;
     }
 }

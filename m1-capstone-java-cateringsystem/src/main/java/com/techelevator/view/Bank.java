@@ -26,7 +26,7 @@ public class Bank {
     }
 
     public double getBalance() {
-        return balance;
+        return Math.round(balance * 100.0) / 100.0;
     }
 
     public void removeBalance(double moneyToRemove) {
@@ -35,23 +35,22 @@ public class Bank {
 
     public Map<String, Integer> makeChange(Double cartTotal) {
         changeDue = balance - cartTotal;
-        changeDue = Math.round(changeDue * 100.0) / 100.0;
         changeMap = new LinkedHashMap<>();
 
-        addToChangeMap(50, "50");
-        addToChangeMap(20, "20");
-        addToChangeMap(10, "10");
-        addToChangeMap(5, "5");
-        addToChangeMap(1, "1");
-        addToChangeMap(.25, "Quarter");
-        addToChangeMap(.1, "Dime");
-        addToChangeMap(.05, "Nickle");
+        addToChangeMap(50.0, "Fifties");
+        addToChangeMap(20.0, "Twenties");
+        addToChangeMap(10.0, "Tens");
+        addToChangeMap(5.0, "Fives");
+        addToChangeMap(1.0, "Ones");
+        addToChangeMap(.25, "Quarters");
+        addToChangeMap(.1, "Dimes");
+        addToChangeMap(.05, "Nickles");
 
         return changeMap;
     }
 
-    public void addToChangeMap(double value, String denomination) {
-        while (changeDue >= value) {
+    private void addToChangeMap(double value, String denomination) {
+        while (Math.round(changeDue * 100.0) / 100.0 >= value) {
             changeDue -= value;
             if (changeMap.containsKey(denomination)) {
                 changeMap.put(denomination, changeMap.get(denomination) + 1);

@@ -16,13 +16,23 @@ public class BankTest {
 
             @Test
 
-    public void test_make_change(){ bank.addMoney(35);
+    public void test_make_change(){ bank.addMoney(100);
                 Map<String,Integer> trialMap = new LinkedHashMap<>();
-                trialMap.put("10",1);
-                trialMap.put("5", 1);
-                trialMap.put("Quarter",2);
-                trialMap.put("Dime",1);
-                trialMap.put("Nickle",1);
-                Assert.assertEquals(trialMap,bank.makeChange(19.35));
+                trialMap.put("Tens",1);
+                trialMap.put("Fives", 1);
+                trialMap.put("Ones",3);
+                trialMap.put("Quarters",1);
+                trialMap.put("Dimes",2);
+                Assert.assertEquals(trialMap,bank.makeChange(81.55));
             }
+    @Test
+    public void test_make_change2(){ bank.addMoney(500);
+        Map<String,Integer> trialMap = new LinkedHashMap<>();
+        trialMap.put("Fifties",7);
+        trialMap.put("Tens",1);
+        trialMap.put("Fives",1);
+        trialMap.put("Quarters",3);
+        trialMap.put("Dimes",1);
+        Assert.assertEquals(trialMap,bank.makeChange(134.15));
+    }
 }
