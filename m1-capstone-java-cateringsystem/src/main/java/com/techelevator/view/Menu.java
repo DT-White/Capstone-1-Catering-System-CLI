@@ -49,7 +49,7 @@ public class Menu {
 
     public void showInventory(Inventory inventory, CateringSystem cateringSystem) {
         String space = " ";
-
+        DecimalFormat f = new DecimalFormat("##.00");
 
        //  Find the longest name in the inventory for equal spacing
     int nameLength = cateringSystem.findLongestNameLength(new ArrayList<>(inventory.getInventoryMap().values()));
@@ -60,9 +60,9 @@ public class Menu {
             CateringItem currentItem = currentEntry.getValue();
             System.out.print(space + currentItem.getProductCode());
             System.out.print("              " + currentItem.getName());
-            System.out.print(space.repeat((nameLength + 4) - currentItem.getName().length()) + currentItem.getQuantity());
-            String quantity = Integer.toString(currentItem.getQuantity());
-            System.out.println( space.repeat(9-quantity.length())+ "$" + currentItem.getPrice());
+            System.out.print(space.repeat((nameLength + 4) - currentItem.getName().length()) + (currentItem.getQuantity() > 0 ? currentItem.getQuantity() : "SOLD OUT"));
+            String quantity = (currentItem.getQuantity() > 0 ? Integer.toString(currentItem.getQuantity()) : "SOLD OUT");
+            System.out.println( space.repeat(9-quantity.length())+ "$" + f.format(currentItem.getPrice()));
         }
     }
 
@@ -88,9 +88,16 @@ public class Menu {
     }
 
     public String readUserSelection(String message) {
-        System.out.println();
-        System.out.print(message);
-        return userInput.nextLine();
+        String userSelection = "Invalid entry";
+        try {
+            System.out.println();
+            System.out.print(message);
+            userSelection = userInput.nextLine();
+        }catch (NumberFormatException e){
+            System.out.println("Invalid entry");
+        } finally {
+            return userSelection;
+        }
     }
 
     public void showOrderMenu(double accountBalance, double subtotal, CateringSystem cateringSystem) {
@@ -106,20 +113,19 @@ public class Menu {
 
     }
 
-    public int addMoneyEntry() {
-        System.out.print("Please enter dollar amount (no change) between 1-500: ");
-        int dollarAmount = 0;
-       // while (dollarAmount < 1 || dollarAmount > 500) {
-            try {
-                dollarAmount = Integer.parseInt(userInput.nextLine());
-
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid entry.");
-
-
-        }
-        return dollarAmount;
-    }
+//    public int addMoneyEntry() {
+//        System.out.print("Please enter dollar amount (no change) between 1-500: ");
+//        int dollarAmount = 0;
+//            try {
+//                dollarAmount = Integer.parseInt(userInput.nextLine());
+//
+//            } catch (NumberFormatException e) {
+//                System.out.println("Invalid entry.");
+//
+//
+//        }
+//        return dollarAmount;
+//    }
 
     public void showCaseMessage(String message) {
         System.out.println();
@@ -135,6 +141,16 @@ public class Menu {
             return "Invalid quantity selected.";
         }
     }
+
+//    public String tryUserSelectedNumber(CateringSystem cateringSystem){
+//        try {
+//            return cateringSystem.userSelectedNumber();
+//        } catch (NullPointerException e) {
+//            return "Invalid product code.";
+//        }catch (NumberFormatException e) {
+//            return "Invalid quantity selected.";
+//        }
+//    }
 
     public void showOrderTotal(Cart cart){
         System.out.println();

@@ -4,6 +4,9 @@ import com.techelevator.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /*
@@ -28,5 +31,24 @@ public class InventoryFileReader {
                 inventory.createItem(currentItemArray);
             }
         }
+    }
+
+    public void readSalesReport(LogFileWriter logFileWriter){
+        File file = new File("TotalSales.rpt");
+        Map<String, Integer> reportItemMap = new HashMap<>();
+        try (Scanner fileReader = new Scanner(file)) {
+            while (fileReader.hasNextLine()) {
+                String currentLine = fileReader.nextLine();
+                if (!currentLine.equals("")) {
+                    String[] currentItemArray = currentLine.split("\\|");
+                    reportItemMap.put(currentItemArray[0], Integer.parseInt(currentItemArray[1]));
+                } else {
+                    break;
+                }
+            }
+            logFileWriter.setReportItemMap(reportItemMap);
+        } catch (IOException e){}
+
+
     }
 }

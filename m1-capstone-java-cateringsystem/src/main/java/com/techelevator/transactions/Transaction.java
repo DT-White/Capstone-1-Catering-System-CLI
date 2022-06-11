@@ -1,4 +1,5 @@
 package com.techelevator.transactions;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -16,10 +17,11 @@ public abstract class Transaction {
     }
     @Override
     public String toString() {
-        return formatDate() + " " + logMessage + " $" + currentTransactionAmount + " $" + totalBalance;
+        DecimalFormat f = new DecimalFormat("##.00");
+        return formatDate() + " " + logMessage + " $" + f.format(currentTransactionAmount) + " $" + f.format(totalBalance);
 
     }
-    private String formatDate () {
+    protected String formatDate () {
 //       int year = transactionDate.getYear();
 //       int month = transactionDate.getMonthValue();
 //       int day = transactionDate.getDayOfMonth();

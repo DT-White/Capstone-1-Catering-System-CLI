@@ -18,32 +18,31 @@ public class Cart {
         this.cartMap = new HashMap<>();
     }
 
-    public String addToCart(String productId, int quantity) throws NullPointerException {
+    public String addToCart(String productId, int quantity){
         String message = "Invalid product code.";
         CateringItem itemToAdd = inventory.findItemById(productId);
-        try {
-            if (quantity < 1 || quantity > itemToAdd.getQuantity()) {
-                return "Invalid quantity. Select available quantity or new item.";
-            }
-            if (inventory.getInventoryMap().containsKey(productId)) {
-                if (cartMap.containsKey(productId)) {
-                    cartMap.put(productId, quantity + cartMap.get(productId));
-                    message = "Item quantity updated.";
-                } else {
-                    cartMap.put(productId, quantity);
-                    message = "Item added to cart.";
-                }
-                subtotal += itemToAdd.getPrice() * quantity;
-                inventory.quantityLoweredInInventory(productId,quantity);
-            }
-        } finally {
-            return message;
+        if (quantity < 1 || quantity > itemToAdd.getQuantity()) {
+            return "Invalid quantity. Select available quantity or new item.";
         }
+        if (productId != null && inventory.getInventoryMap().containsKey(productId)) {
+            if (cartMap.containsKey(productId)) {
+                cartMap.put(productId, quantity + cartMap.get(productId));
+                message = "Item quantity updated.";
+            } else {
+                cartMap.put(productId, quantity);
+                message = "Item added to cart.";
+            }
+            subtotal += itemToAdd.getPrice() * quantity;
+            inventory.quantityLoweredInInventory(productId, quantity);
+        }
+        return message;
     }
+
+
 
     public List<CateringItem> getCartList() {
         List<CateringItem> cartList = new ArrayList<>();
-        for (Map.Entry<String,Integer> currentEntry: cartMap.entrySet()){
+        for (Map.Entry<String, Integer> currentEntry : cartMap.entrySet()) {
             cartList.add(inventory.findItemById(currentEntry.getKey()));
         }
         return cartList;
@@ -57,21 +56,17 @@ public class Cart {
         return Math.round(subtotal * 100.0) / 100.0;
     }
 
-    public List <String> formatLogMessage() {
-       List <String> messageList = new ArrayList<>();
-       for (Map.Entry<String,Integer> currentEntry: cartMap.entrySet()){
-           CateringItem currentItem = inventory.findItemById(currentEntry.getKey());
-           messageList.add(currentEntry.getValue() + " " + currentItem.getName() + " " + currentItem.getProductCode() );
-        }
-     return messageList;
+    private String formatLogMessage(String productId) {
+        CateringItem currentItem = inventory.findItemById(productId);
+        return productId + " " + currentItem.getName() + " " + currentItem.getProductCode();
     }
-    public Map<String,Double> getExtendedPrice () {
+
+    public Map<String, Double> getExtendedPriceMap() {
         Map<String, Double> extendedPriceMap = new HashMap<>();
         for
         (Map.Entry<String, Integer> currentEntry : cartMap.entrySet()) {
             CateringItem cateringItem = inventory.findItemById(currentEntry.getKey());
-            extendedPriceMap.put(currentEntry.getKey(), cateringItem.getPrice() * currentEntry.getValue());
-
+            extendedPriceMap.put(formatLogMessage(currentEntry.getKey()), Math.round(cateringItem.getPrice() * currentEntry.getValue() * 100.0) / 100.0);
         }
         return extendedPriceMap;
     }

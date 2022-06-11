@@ -41,6 +41,15 @@ public class Inventory {
         }
         return null;
     }
+
+    public CateringItem findItemByName (String name) {
+        for (Map.Entry<String, CateringItem> currentItem : inventoryMap.entrySet()){
+            if (currentItem.getValue().getName().equalsIgnoreCase(name)) {
+                return currentItem.getValue();
+            }
+        }
+        return null;
+    }
     public void quantityLoweredInInventory(String productId,int quantity) {
         CateringItem itemToDeplete = inventoryMap.get(productId);
         itemToDeplete.setQuantity(itemToDeplete.getQuantity()- quantity);

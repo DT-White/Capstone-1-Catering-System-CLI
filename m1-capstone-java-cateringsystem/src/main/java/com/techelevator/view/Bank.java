@@ -42,8 +42,9 @@ public class Bank {
         return Math.round(balance * 100.0) / 100.0;
     }
 
-    public void removeBalance(double moneyToRemove) {
+    public double removeBalance(double moneyToRemove) {
         balance -= moneyToRemove;
+        return balance;
     }
 
     public Map<String, Integer> makeChange(Double cartTotal) {

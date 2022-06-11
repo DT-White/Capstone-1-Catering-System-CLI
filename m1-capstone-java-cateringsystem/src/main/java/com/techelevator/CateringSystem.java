@@ -4,6 +4,7 @@ import com.techelevator.filereader.InventoryFileReader;
 import com.techelevator.filereader.LogFileWriter;
 import com.techelevator.items.CateringItem;
 import com.techelevator.transactions.Sale;
+import com.techelevator.transactions.Withdrawal;
 import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
@@ -21,7 +22,8 @@ public class CateringSystem {
     private Cart cart;
     private Bank bank;
     private Inventory inventory;
-private LogFileWriter logFileWriter;
+    private LogFileWriter logFileWriter;
+
     public CateringSystem(Menu menu, Cart cart, Bank bank, Inventory inventory, LogFileWriter logFileWriter) {
         this.menu = menu;
         this.cart = cart;
@@ -30,25 +32,29 @@ private LogFileWriter logFileWriter;
         this.logFileWriter = logFileWriter;
     }
 
-    public int userSelectedNumber(String input) {
-        int number = Integer.parseInt(input);
-        if (number > 0 && number < 4) {
+    public int checkForValidMenuSelection(String input) throws NumberFormatException{
+        int number = 0;
+        try {
+            number = Integer.parseInt(input);
+            if (number > 0 && number < 4) {
+                return number;
+            }
+            menu.showCaseMessage("Invalid entry. Please enter 1, 2, or 3.");
+        } finally {
             return number;
         }
-        menu.showCaseMessage("Invalid entry. Please enter 1, 2, or 3.");
-        return 0;
     }
 
-    public String userSelectedAddToCart() throws NullPointerException, NumberFormatException{
+    public String userSelectedAddToCart() throws NumberFormatException {
         String cartMessage = "Invalid product code.";
         String productCode = menu.readUserSelection("Please enter a product code to add to cart: ");
-        int quantity = Integer.parseInt(menu.readUserSelection("Please enter a quantity for item " + productCode + ": "));
+        int quantity;
         try {
-            cartMessage = cart.addToCart(productCode, quantity);
+            quantity = Integer.parseInt(menu.readUserSelection("Please enter a quantity for item " + productCode + ": "));
         } finally {
-            return cartMessage;
         }
-
+        cartMessage = cart.addToCart(productCode, quantity);
+        return cartMessage;
     }
 
     public String checkTotalBalance() {
@@ -71,18 +77,18 @@ private LogFileWriter logFileWriter;
 
     }
 
-    public String returnChange(){
+    public String returnChange() {
         Map<String, Integer> changeMap = bank.makeChange(cart.getSubtotal());
         String changeString = " You received";
         String[] stringParts = new String[changeMap.size()];
         int i = 0;
-        for (Map.Entry<String, Integer> denomination: changeMap.entrySet()){
-             stringParts[i] = " (" + denomination.getValue() + ") " + denomination.getKey();
-             i++;
+        for (Map.Entry<String, Integer> denomination : changeMap.entrySet()) {
+            stringParts[i] = " (" + denomination.getValue() + ") " + denomination.getKey();
+            i++;
         }
         changeString += stringParts[0];
         for (int j = 1; j < stringParts.length; j++) {
-            changeString +="," + stringParts[j];
+            changeString += "," + stringParts[j];
         }
         changeString += " in change";
         return changeString;
@@ -92,14 +98,29 @@ private LogFileWriter logFileWriter;
         this.cart = cart;
     }
 
-    public void completeTransaction () {
+    public void completeTransaction(InventoryFileReader inventoryFileReader, LogFileWriter logFileWriter){
         menu.showCart(inventory, cart, this);
         menu.showOrderTotal(cart);
         menu.showChange(this);
+        for (Map.Entry<String, Double> currentLogEntry : cart.getExtendedPriceMap().entrySet()) {
+            logFileWriter.writeToLog(new Sale(currentLogEntry.getKey(), currentLogEntry.getValue(), bank.removeBalance(currentLogEntry.getValue())));
+        }
+        logFileWriter.writeToLog(new Withdrawal(bank.getBalance()));
         bank.removeBalance(bank.getBalance());
-        for (String logMessage: cart.formatLogMessage()){
-                logFileWriter.writeToLog(new Sale( logMessage,cart.getSubtotal(), bank.getBalance() ));}
-        cart = new Cart (inventory);
+        inventoryFileReader.readSalesReport(logFileWriter);
+        logFileWriter.writeSalesReport(cart, inventory);
+        cart = new Cart(inventory);
         setCart(cart);
+    }
+
+    public int checkForValidMoneyEntry() {
+        int dollarAmount = 0;
+        try {
+            dollarAmount = Integer.parseInt(menu.readUserSelection("Please enter dollar amount (no change) between 1-500: "));
+
+        } catch (NumberFormatException e) {
+            menu.showCaseMessage("Invalid entry.");
+        }
+        return dollarAmount;
     }
 }
