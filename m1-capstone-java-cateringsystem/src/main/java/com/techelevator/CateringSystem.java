@@ -1,7 +1,9 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.filereader.LogFileWriter;
 import com.techelevator.items.CateringItem;
+import com.techelevator.transactions.Sale;
 import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
@@ -19,12 +21,13 @@ public class CateringSystem {
     private Cart cart;
     private Bank bank;
     private Inventory inventory;
-
-    public CateringSystem(Menu menu, Cart cart, Bank bank, Inventory inventory) {
+private LogFileWriter logFileWriter;
+    public CateringSystem(Menu menu, Cart cart, Bank bank, Inventory inventory, LogFileWriter logFileWriter) {
         this.menu = menu;
         this.cart = cart;
         this.bank = bank;
         this.inventory = inventory;
+        this.logFileWriter = logFileWriter;
     }
 
     public int userSelectedNumber(String input) {
@@ -36,7 +39,7 @@ public class CateringSystem {
         return 0;
     }
 
-    public String userSelectedAddToCart() throws NullPointerException {
+    public String userSelectedAddToCart() throws NullPointerException, NumberFormatException{
         String cartMessage = "Invalid product code.";
         String productCode = menu.readUserSelection("Please enter a product code to add to cart: ");
         int quantity = Integer.parseInt(menu.readUserSelection("Please enter a quantity for item " + productCode + ": "));
@@ -85,5 +88,18 @@ public class CateringSystem {
         return changeString;
     }
 
+    public void setCart(Cart cart) {
+        this.cart = cart;
+    }
 
+    public void completeTransaction () {
+        menu.showCart(inventory, cart, this);
+        menu.showOrderTotal(cart);
+        menu.showChange(this);
+        bank.removeBalance(bank.getBalance());
+        for (String logMessage: cart.formatLogMessage()){
+                logFileWriter.writeToLog(new Sale( logMessage,cart.getSubtotal(), bank.getBalance() ));}
+        cart = new Cart (inventory);
+        setCart(cart);
+    }
 }

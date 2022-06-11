@@ -131,6 +131,8 @@ public class Menu {
             return cateringSystem.userSelectedAddToCart();
         } catch (NullPointerException e) {
             return "Invalid product code.";
+        }catch (NumberFormatException e) {
+            return "Invalid quantity selected.";
         }
     }
 

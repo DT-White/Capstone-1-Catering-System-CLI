@@ -1,11 +1,14 @@
 package com.techelevator;
 
 import com.techelevator.filereader.InventoryFileReader;
+import com.techelevator.filereader.LogFileWriter;
 import com.techelevator.items.CateringItem;
+import com.techelevator.transactions.Deposit;
 import com.techelevator.view.Bank;
 import com.techelevator.view.Menu;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /*
  * This class should control the workflow of the application, but not do any other work
@@ -34,19 +37,21 @@ public class CateringSystemCLI {
 	/*
 	 * Your application starts here
 	 */
-	public void run() {
-Bank bank = new Bank();
+	public void run()  {
+		LogFileWriter logFileWriter = new LogFileWriter();
+Bank bank = new Bank(logFileWriter);
 		menu.showWelcomeMessage();
 		InventoryFileReader inventoryFileReader = new InventoryFileReader("cateringsystem.csv");
 		Inventory inventory = new Inventory();
 		Cart cart = new Cart(inventory);
-		CateringSystem cateringSystem = new CateringSystem(menu, cart,bank,inventory);
+		CateringSystem cateringSystem = new CateringSystem(menu, cart,bank,inventory,logFileWriter);
 		try {
 			inventoryFileReader.readInventory(inventory);
 		} catch (FileNotFoundException e) {
 		}
 
 		while (true) {
+
 			/*
 			Display the Starting Menu and get the users choice.
 			Remember all uses of System.out and System.in should be in the menu
@@ -70,16 +75,17 @@ Bank bank = new Bank();
 					} else if (userSelection == 2) {
 						menu.showInventory(inventory,cateringSystem);
 						menu.showCaseMessage(menu.tryUserSelectedAddToCart(cateringSystem));
-					} else if (userSelection == 3) {
-						menu.showCart(inventory, cart, cateringSystem);
-						menu.showOrderTotal(cart);
-						menu.showChange(cateringSystem);
+					} else  { cateringSystem.completeTransaction();
 						break;
+
 					}
 				}
+			} else{
+				break;
+
 			}
 
-		}
+		}menu.showCaseMessage("Thanks For Shopping!");
 	}
 
 	/*

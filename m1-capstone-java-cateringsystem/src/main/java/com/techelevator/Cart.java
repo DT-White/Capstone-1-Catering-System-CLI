@@ -56,4 +56,24 @@ public class Cart {
     public double getSubtotal() {
         return Math.round(subtotal * 100.0) / 100.0;
     }
+
+    public List <String> formatLogMessage() {
+       List <String> messageList = new ArrayList<>();
+       for (Map.Entry<String,Integer> currentEntry: cartMap.entrySet()){
+           CateringItem currentItem = inventory.findItemById(currentEntry.getKey());
+           messageList.add(currentEntry.getValue() + " " + currentItem.getName() + " " + currentItem.getProductCode() );
+        }
+     return messageList;
+    }
+    public Map<String,Double> getExtendedPrice () {
+        Map<String, Double> extendedPriceMap = new HashMap<>();
+        for
+        (Map.Entry<String, Integer> currentEntry : cartMap.entrySet()) {
+            CateringItem cateringItem = inventory.findItemById(currentEntry.getKey());
+            extendedPriceMap.put(currentEntry.getKey(), cateringItem.getPrice() * currentEntry.getValue());
+
+        }
+        return extendedPriceMap;
+    }
 }
+
