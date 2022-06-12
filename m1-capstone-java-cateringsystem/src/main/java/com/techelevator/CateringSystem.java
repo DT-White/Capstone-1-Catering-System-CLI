@@ -105,10 +105,11 @@ public class CateringSystem {
             int quantity;
             try {
                 quantity = Integer.parseInt(menu.readUserInput("Please enter a quantity for item " + productId + ": "));
-                if (quantity > 0 && quantity <= itemToAdd.getQuantity()) {
+
+                if (quantity > 0 && quantity <= itemToAdd.getQuantity() && (itemToAdd.getPrice() * quantity) + cart.getSubtotal() <= bank.getBalance()) {
                     message = cart.addToCart(productId, quantity);
                 } else {
-                    message = "Invalid quantity. Select available quantity or new item.";
+                    message = "Insufficient funds or invalid quantity. Check availability and try again.";
                 }
             } catch (NumberFormatException e) {
                 message = "Invalid quantity.";

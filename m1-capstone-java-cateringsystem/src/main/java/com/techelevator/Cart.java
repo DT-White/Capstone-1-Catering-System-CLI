@@ -30,6 +30,7 @@ public class Cart {
         }
         subtotal += itemToAdd.getPrice() * quantity;
         inventory.decreaseInventoryQuantity(productId, quantity);
+
         return message;
     }
 
