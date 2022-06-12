@@ -18,27 +18,20 @@ public class Cart {
         this.cartMap = new HashMap<>();
     }
 
-    public String addToCart(String productId, int quantity){
-        String message = "Invalid product code.";
+    public String addToCart(String productId, int quantity) {
+        String message;
         CateringItem itemToAdd = inventory.findItemById(productId);
-        if (quantity < 1 || quantity > itemToAdd.getQuantity()) {
-            return "Invalid quantity. Select available quantity or new item.";
+        if (cartMap.containsKey(productId)) {
+            cartMap.put(productId, quantity + cartMap.get(productId));
+            message = "Item quantity updated.";
+        } else {
+            cartMap.put(productId, quantity);
+            message = "Item added to cart.";
         }
-        if (productId != null && inventory.getInventoryMap().containsKey(productId)) {
-            if (cartMap.containsKey(productId)) {
-                cartMap.put(productId, quantity + cartMap.get(productId));
-                message = "Item quantity updated.";
-            } else {
-                cartMap.put(productId, quantity);
-                message = "Item added to cart.";
-            }
-            subtotal += itemToAdd.getPrice() * quantity;
-            inventory.quantityLoweredInInventory(productId, quantity);
-        }
+        subtotal += itemToAdd.getPrice() * quantity;
+        inventory.decreaseInventoryQuantity(productId, quantity);
         return message;
     }
-
-
 
     public List<CateringItem> getCartList() {
         List<CateringItem> cartList = new ArrayList<>();

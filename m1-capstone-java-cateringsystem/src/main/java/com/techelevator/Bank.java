@@ -1,10 +1,5 @@
-package com.techelevator.view;
+package com.techelevator;
 
-import com.techelevator.filereader.LogFileWriter;
-import com.techelevator.transactions.Deposit;
-import com.techelevator.transactions.Transaction;
-
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -12,30 +7,12 @@ public class Bank {
     private double balance;
     private double changeDue;
     private Map<String, Integer> changeMap;
-    private LogFileWriter logFileWriter;
-
-    public Bank(LogFileWriter logFileWriter) {
-        this.logFileWriter = logFileWriter;
-    }
 
     public Bank() {
     }
 
-    public String addMoney(int moneyToAdd)  {
-        String message = "$" + moneyToAdd + " added successfully";
-
-        if (moneyToAdd <= 0 || moneyToAdd > 500) {
-            message = "Amount needs to be between 1-500";
-        } else if
-        (moneyToAdd + balance > 1500) {
-            message = "Balance can not be higher than 1500, spend what you have!";
-        } else {
-            balance += moneyToAdd;
-            logFileWriter.writeToLog(new Deposit(moneyToAdd, balance));
-        }
-
-
-        return message;
+    public void addMoney(int moneyToAdd) {
+        balance += moneyToAdd;
     }
 
     public double getBalance() {

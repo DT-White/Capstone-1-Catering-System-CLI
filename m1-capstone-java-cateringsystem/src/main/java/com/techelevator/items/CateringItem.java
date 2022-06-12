@@ -1,16 +1,11 @@
 package com.techelevator.items;
 
-/*
-    This represents a single catering item in the system
- */
 public abstract class CateringItem {
-
-
 
     private String productCode;
     private String name;
     private double price;
-    private int quantity = 25;
+    private int quantity;
     private String itemType;
 
     public CateringItem(String itemType, String productCode, String name, Double price) {
@@ -18,7 +13,7 @@ public abstract class CateringItem {
         this.productCode = productCode;
         this.name = name;
         this.price = price;
-
+        this.quantity = 25;
     }
 
     public String getProductCode() {
@@ -26,7 +21,6 @@ public abstract class CateringItem {
     }
 
     public abstract String getReminder();
-
 
     public String getName() {
         return name;
