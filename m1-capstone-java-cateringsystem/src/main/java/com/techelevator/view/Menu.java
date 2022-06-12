@@ -71,12 +71,13 @@ public class Menu {
         for (CateringItem currentItem : cart.getCartList()) {
             int quantity = cart.getCartMap().get(currentItem.getProductCode());
             String extendedPriceFormatted = F.format(currentItem.getPrice() * quantity);
+            String individualPriceFormatted = F.format(currentItem.getPrice());
             System.out.print(SPACE + quantity);
             System.out.print(SPACE.repeat(6 - Integer.toString(quantity).length()) + currentItem.getItemType());
             System.out.print(SPACE.repeat(12 - currentItem.getItemType().length()) + currentItem.getName());
-            System.out.print(SPACE.repeat((nameLength + 4) - currentItem.getName().length()) + "$" + F.format(currentItem.getPrice()));
-            System.out.print(SPACE.repeat(9 - extendedPriceFormatted.length()) + "$" + extendedPriceFormatted);
-            System.out.println("   " + currentItem.getReminder());
+            System.out.print(SPACE.repeat((nameLength + 4) - currentItem.getName().length()) + "$" + individualPriceFormatted);
+            System.out.print(SPACE.repeat(11 - individualPriceFormatted.length()) + "$" + extendedPriceFormatted);
+            System.out.println(SPACE.repeat(11 - extendedPriceFormatted.length()) + currentItem.getReminder());
         }
     }
 

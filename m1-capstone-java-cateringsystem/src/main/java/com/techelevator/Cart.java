@@ -51,7 +51,7 @@ public class Cart {
 
     private String formatLogMessage(String productId) {
         CateringItem currentItem = inventory.findItemById(productId);
-        return productId + " " + currentItem.getName() + " " + currentItem.getProductCode();
+        return cartMap.get(productId) + " " + currentItem.getName() + " " + currentItem.getProductCode();
     }
 
     public Map<String, Double> getExtendedPriceMap() {
