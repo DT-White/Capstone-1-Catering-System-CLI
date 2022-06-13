@@ -9,10 +9,5 @@ public class InventoryFileReaderTest {
 
     public void setup() {inventoryFileReader = new InventoryFileReader();}
 
-//    @Test
-//
-//    public void does_it_read_files(){
-//String doesItReadFiles = inventoryFileReader.;
-//Assert.assertEquals("cateringsystem.csv",doesItReadFiles);
-//    }
+
 }
