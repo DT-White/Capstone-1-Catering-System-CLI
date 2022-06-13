@@ -6,10 +6,10 @@ import java.io.*;
 
 public class LogFileWriter {
 
-    public void writeToLog(Transaction transaction) throws FileNotFoundException, IOException {
-        File logFile = new File("Log.txt");
-        try (PrintWriter printWriter = new PrintWriter(new FileOutputStream(logFile, true)); BufferedWriter bufferedWriter = new BufferedWriter(printWriter)) {
-            bufferedWriter.write(transaction.toString());
+    public void writeToLog(String logFile, String transaction) throws FileNotFoundException, IOException {
+        try (PrintWriter printWriter = new PrintWriter(new FileOutputStream(logFile, true));
+             BufferedWriter bufferedWriter = new BufferedWriter(printWriter)) {
+            bufferedWriter.write(transaction);
             bufferedWriter.newLine();
         }
     }

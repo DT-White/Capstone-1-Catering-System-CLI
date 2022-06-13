@@ -10,9 +10,11 @@ import com.techelevator.transactions.Transaction;
 import com.techelevator.transactions.Withdrawal;
 import com.techelevator.view.Menu;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Scanner;
 
 
 public class CateringSystem {
@@ -37,7 +39,9 @@ public class CateringSystem {
 
     public void populateInventory() {
         try {
-            inventoryFileReader.readInventory(inventory);
+            for (String line : inventoryFileReader.readInventory("cateringsystem.csv")) {
+                inventory.createItem(line.split("\\|"));
+            }
         } catch (FileNotFoundException e) {
             menu.showCaseMessage("Inventory file not found.");
         }
@@ -105,11 +109,14 @@ public class CateringSystem {
             int quantity;
             try {
                 quantity = Integer.parseInt(menu.readUserInput("Please enter a quantity for item " + productId + ": "));
-
-                if (quantity > 0 && quantity <= itemToAdd.getQuantity() && (itemToAdd.getPrice() * quantity) + cart.getSubtotal() <= bank.getBalance()) {
-                    message = cart.addToCart(productId, quantity);
+                if (quantity > 0 && quantity <= itemToAdd.getQuantity()) {
+                    if (cart.getSubtotal() + (itemToAdd.getPrice() * quantity) <= bank.getBalance()) {
+                        message = cart.addToCart(productId, quantity);
+                    } else {
+                        message = "Insufficient funds.";
+                    }
                 } else {
-                    message = "Insufficient funds or invalid quantity. Check availability and try again.";
+                    message = "Invalid quantity. Check inventory.";
                 }
             } catch (NumberFormatException e) {
                 message = "Invalid quantity.";
@@ -177,7 +184,7 @@ public class CateringSystem {
 
     private void writeLogEntry(Transaction transaction) {
         try {
-            logFileWriter.writeToLog(transaction);
+            logFileWriter.writeToLog("Log.txt", transaction.toString());
         } catch (FileNotFoundException e) {
             menu.showCaseMessage("Log file not found");
         } catch (IOException e) {
